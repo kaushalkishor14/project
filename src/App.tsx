@@ -6,11 +6,14 @@ import { useMemoryStore } from './store/useMemoryStore';
 import { MapPin, Search, Heart, X } from 'lucide-react';
 import { MemoryList } from './components/MemoryList';
 import { MemoryType } from './types/memory';
+import { useNavigate } from 'react-router-dom'; // Import the useNavigate hook for navigation
+import { toast } from 'sonner';
 
 function App() {
   const memories = useMemoryStore((state) => state.memories);
   const [selectedType, setSelectedType] = useState<MemoryType | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate(); // Initialize the useNavigate hook
 
   const memoryTypes = [
     { type: 'milestone', label: 'Milestone 🌟', color: 'bg-red-400' },
@@ -31,6 +34,13 @@ function App() {
     });
   }, [memories, selectedType, searchQuery]);
 
+  // Logout function
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Remove token from localStorage
+    navigate("/login"); // Redirect to login page
+    toast.success("Logout successful!"); // Show success message
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 p-2 sm:p-4 md:p-6">
       <div className="max-w-7xl mx-auto">
@@ -46,6 +56,7 @@ function App() {
               </h1>
             </div>
             
+            {/* Search Input */}
             <div className="relative w-full sm:w-auto">
               <input
                 type="text"
@@ -64,6 +75,14 @@ function App() {
                 </button>
               )}
             </div>
+
+            {/* Logout Button */}
+            <button
+              onClick={handleLogout}
+              className="text-white bg-red-500 hover:bg-red-600 py-2 px-4 rounded-lg"
+            >
+              Logout
+            </button>
           </div>
         </div>
 

@@ -4,6 +4,7 @@ import { X, Calendar, MapPin, Image as ImageIcon } from 'lucide-react';
 import { useMemoryStore } from '../store/useMemoryStore';
 import { MemoryType } from '../types/memory';
 import { cn } from '../lib/utils';
+import { fr } from 'date-fns/locale';
 
 interface CreateMemoryFormProps {
   location: { lat: number; lng: number };
@@ -12,6 +13,7 @@ interface CreateMemoryFormProps {
 }
 
 export function CreateMemoryForm({ location, locationName, onClose }: CreateMemoryFormProps) {
+  console.log(location, locationName, "lndalkdlkj");
   const [title, setTitle] = useState(''); 
   const [description, setDescription] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
@@ -38,7 +40,7 @@ export function CreateMemoryForm({ location, locationName, onClose }: CreateMemo
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Use a default image if no image was uploaded
@@ -56,8 +58,69 @@ export function CreateMemoryForm({ location, locationName, onClose }: CreateMemo
       },
       imageUrl: finalImageUrl,
     });
+    
+  
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("date", date);  
+    formData.append("type", type);
+    formData.append("lat", String(location?.lat));
+    formData.append("lng", String(location?.lng));
+    formData.append("image", imageUrl);
+    console.log("formdata", formData);
+    
+    try {
+          const response = await fetch("http://localhost:5000/api/memories/add", {
+            method: "POST",
+            body: formData,
+          });
+      
+          if (!response.ok) {
+            throw new Error("Failed to create memory");
+          }
+      
+         
+        } catch (error) {
+            console.error("Error creating memory:", error);
+          }
     onClose();
   };
+  
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  
+  //   // const formData = new FormData();
+  //   // formData.append("title", title);
+  //   // formData.append("city", locationName); // Assuming locationName is the city
+  //   // formData.append("lat", String(location.lat));
+  //   // formData.append("lng", String(location.lng));
+  //   // formData.append("date", date);
+  //   // formData.append("description", description);
+  //   // formData.append("type", type);
+    
+  //   // if (imageFile) {
+  //   //   formData.append("image", imageFile); // Append file
+  //   // }
+  
+  //   // try {
+  //   //   const response = await fetch("http://localhost:5000/api/memories/add", {
+  //   //     method: "POST",
+  //   //     body: formData,
+  //   //   });
+  
+  //   //   if (!response.ok) {
+  //   //     throw new Error("Failed to create memory");
+  //   //   }
+  
+  //   //   // const newMemory = await response.json();
+  //   //   // addMemory(newMemory);
+  //   // } catch (error) {
+  //     //   console.error("Error creating memory:", error);
+  //     // }
+  //       onClose();
+  // };
+  
 
   return (
     <Dialog.Root open={true} onOpenChange={onClose}>

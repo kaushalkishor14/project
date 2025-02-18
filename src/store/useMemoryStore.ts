@@ -5,15 +5,16 @@ import { Memory, MemoryType } from "../types/memory";
 const initialMemories = [
   {
     id: "1",
-    title: "First Trip to Taj Mahal ",
-    description:
-      "Visited the beautiful Taj Mahal in Agra. An amazing experience of India's rich history.",
+    title: "Camera man ",
+    description: `The day I met you,
+When I saw you for the first time, my mind went, "Wow!"
+And you thought, "This is the cameraman."`,
     date: new Date("2023-01-15"),
     type: "romantic" as MemoryType,
     location: {
-      lat: 27.1751,
-      lng: 78.0421,
-      name: "Taj Mahal, Agra, India",
+      lat: 26.4492,
+      lng: 86.4117,
+      name: "Home , Bathnaha,Bihar,india",
     },
     imageUrl: "./uploads/image1.jpg",
   },
